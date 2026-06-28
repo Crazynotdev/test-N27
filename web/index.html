@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="CRAZY VOL1 — Connecte ton WhatsApp et active ton bot TERRA-XMD en 60 secondes." />
+<title>CRAZY VOL1 — Bot WhatsApp by Crazynotdev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+/* ═══════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════ */
+:root {
+  --bg:         #08090d;
+  --bg2:        #0c0f18;
+  --card:       #111520;
+  --card2:      #181e2e;
+  --border:     #1c2338;
+  --green:      #00e5a0;
+  --glow:       #00e5a018;
+  --dim:        #00e5a014;
+  --ring:       #00e5a030;
+  --text:       #eef2ff;
+  --text2:      #a8b4d0;
+  --muted:      #5a6a8a;
+  --danger:     #f04060;
+  --warn:       #f0a020;
+  --mono:       'JetBrains Mono', monospace;
+  --sans:       'Outfit', sans-serif;
+  --r:          14px;
+  --rsm:        8px;
+  --rxs:        6px;
+}
+
+/* ═══════════════════════════════════════
+   RESET
+═══════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--sans); font-size: 15px; line-height: 1.65;
+  overflow-x: hidden; min-height: 100vh;
+}
+
+/* ═══════════════════════════════════════
+   BG
+═══════════════════════════════════════ */
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: radial-gradient(ellipse 90% 55% at 50% 0%, black 20%, transparent 100%);
+  opacity: 0.28;
+}
+.bg-glow {
+  position: fixed; top: -280px; left: 50%; transform: translateX(-50%);
+  width: 900px; height: 560px;
+  background: radial-gradient(ellipse, var(--glow) 0%, transparent 65%);
+  z-index: 0; pointer-events: none;
+}
+
+/* ═══════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════ */
+.wrap { position: relative; z-index: 1; max-width: 540px; margin: 0 auto; padding: 0 20px 100px; }
+
+/* ═══════════════════════════════════════
+   HEADER
+═══════════════════════════════════════ */
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px; position: relative; z-index: 10;
+}
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+.logo-mark {
+  width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
+  background: linear-gradient(140deg, var(--green) 0%, #00a870 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; box-shadow: 0 4px 16px var(--ring);
+}
+.logo-name { font-family: var(--mono); font-size: 13px; font-weight: 700; letter-spacing: .07em; }
+.logo-name sup {
+  font-size: 9px; font-weight: 600; color: var(--green);
+  background: var(--dim); border: 1px solid var(--ring);
+  padding: 1px 5px; border-radius: 3px; margin-left: 4px;
+  vertical-align: super; letter-spacing: .1em;
+}
+.header-nav { display: flex; align-items: center; gap: 8px; }
+.btn-ghost {
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  color: var(--muted); background: transparent;
+  border: 1px solid var(--border); border-radius: var(--rsm);
+  padding: 7px 14px; cursor: pointer; text-decoration: none;
+  transition: color .18s, border-color .18s;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.btn-ghost:hover { color: var(--green); border-color: var(--green); }
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+.hero { padding: 56px 0 44px; text-align: center; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  color: var(--green); letter-spacing: .13em; text-transform: uppercase;
+  background: var(--dim); border: 1px solid var(--ring);
+  padding: 5px 15px; border-radius: 100px; margin-bottom: 22px;
+}
+.badge-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+
+.hero-title {
+  font-family: var(--sans); font-size: clamp(34px, 9vw, 54px);
+  font-weight: 800; line-height: 1.08; letter-spacing: -.025em; margin-bottom: 18px;
+}
+.hero-title .hi { color: var(--green); }
+.hero-sub { font-size: 15px; color: var(--text2); line-height: 1.72; max-width: 370px; margin: 0 auto; }
+
+/* ═══════════════════════════════════════
+   STEPPER
+═══════════════════════════════════════ */
+.stepper {
+  display: flex; align-items: center;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 6px; margin: 36px 0 28px;
+}
+.step-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 11px 12px; border-radius: var(--rsm);
+  font-family: var(--mono); font-size: 12px; font-weight: 600;
+  color: var(--muted); background: none; border: none; cursor: pointer;
+  transition: background .2s, color .2s, box-shadow .2s;
+}
+.step-btn.active { background: var(--card2); color: var(--text); box-shadow: 0 2px 10px #00000040; }
+.step-btn.done   { color: var(--green); }
+.step-num {
+  width: 21px; height: 21px; border-radius: 50%; flex-shrink: 0;
+  background: var(--border); color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; transition: background .2s, color .2s;
+}
+.step-btn.active .step-num,
+.step-btn.done   .step-num { background: var(--green); color: var(--bg); }
+.step-arrow { color: var(--border); font-size: 16px; padding: 0 4px; flex-shrink: 0; }
+
+/* ═══════════════════════════════════════
+   CARD
+═══════════════════════════════════════ */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 30px; position: relative; overflow: hidden;
+}
+.card::after {
+  content: ''; position: absolute; top: 0; left: 20%; right: 20%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--green), transparent); opacity: .35;
+}
+.card-head { margin-bottom: 24px; }
+.card-title { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+.card-desc  { font-size: 13px; color: var(--text2); }
+
+/* ═══════════════════════════════════════
+   FORM
+═══════════════════════════════════════ */
+.field { margin-bottom: 18px; }
+.field-label {
+  display: block; font-family: var(--mono); font-size: 10px; font-weight: 700;
+  color: var(--muted); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px;
+}
+.input-shell { position: relative; }
+.input-icon {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  font-size: 18px; pointer-events: none; line-height: 1;
+}
+.text-input {
+  width: 100%; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--rsm); color: var(--text);
+  font-family: var(--mono); font-size: 14px; font-weight: 600;
+  padding: 13px 13px 13px 46px; outline: none;
+  transition: border-color .18s, box-shadow .18s; -webkit-appearance: none;
+}
+.text-input::placeholder { color: var(--muted); font-weight: 400; }
+.text-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px var(--dim); }
+
+/* ═══════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════ */
+.btn {
+  width: 100%; padding: 14px 20px; border-radius: var(--rsm);
+  font-family: var(--sans); font-size: 14px; font-weight: 700; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: background .18s, transform .15s, box-shadow .18s; outline: none;
+}
+.btn:focus-visible { box-shadow: 0 0 0 3px var(--ring); }
+.btn-primary { background: var(--green); color: #060a0f; }
+.btn-primary:hover:not(:disabled) {
+  background: #00ceA0; transform: translateY(-1px); box-shadow: 0 8px 28px var(--ring);
+}
+.btn-primary:active:not(:disabled) { transform: translateY(0); }
+.btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+.btn-danger-outline {
+  width: 100%; padding: 12px; border-radius: var(--rsm);
+  font-family: var(--mono); font-size: 12px; font-weight: 700;
+  background: transparent; border: 1px solid #f0406025; color: var(--danger);
+  cursor: pointer; outline: none; display: flex; align-items: center; justify-content: center; gap: 7px;
+  transition: background .18s, border-color .18s;
+}
+.btn-danger-outline:hover { background: #f0406010; border-color: var(--danger); }
+
+.spinner {
+  width: 15px; height: 15px; border-radius: 50%; flex-shrink: 0;
+  border: 2px solid transparent; border-top-color: currentColor;
+  animation: spin .65s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══════════════════════════════════════
+   TERMINAL
+═══════════════════════════════════════ */
+.terminal {
+  background: #040608; border: 1px solid #101820;
+  border-radius: var(--rsm); overflow: hidden; margin: 22px 0; font-family: var(--mono);
+}
+.term-bar {
+  background: #080c12; border-bottom: 1px solid #101820;
+  padding: 9px 14px; display: flex; align-items: center; gap: 6px;
+}
+.term-dot { width: 10px; height: 10px; border-radius: 50%; }
+.term-dot:nth-child(1){background:#ff5f57} .term-dot:nth-child(2){background:#febc2e} .term-dot:nth-child(3){background:#28c840}
+.term-title { margin: 0 auto; font-size: 10px; color: #2a3a2a; letter-spacing: .06em; }
+.term-body { padding: 18px 20px; min-height: 110px; }
+.term-line { display: flex; gap: 9px; font-size: 12px; color: #507050; margin-bottom: 8px; }
+.term-prompt { color: var(--green); flex-shrink: 0; }
+.term-cmd    { color: #688068; }
+.term-idle   { font-size: 12px; color: #304030; padding: 14px 0 2px; }
+.term-code-wrap { padding: 10px 0 6px; text-align: center; }
+.term-code {
+  font-size: clamp(30px, 9vw, 44px); font-weight: 700; color: var(--green);
+  letter-spacing: .24em; text-shadow: 0 0 40px #00e5a055; display: inline;
+}
+.term-cursor {
+  display: inline-block; width: 2px; height: .85em;
+  background: var(--green); vertical-align: middle; margin-left: 2px;
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.copy-bar { padding: 0 0 4px; }
+.btn-copy {
+  width: 100%; padding: 11px; border-radius: var(--rxs);
+  font-family: var(--mono); font-size: 12px; font-weight: 700;
+  background: var(--dim); border: 1px solid var(--ring); color: var(--green);
+  cursor: pointer; outline: none; display: flex; align-items: center; justify-content: center; gap: 6px;
+  transition: background .18s;
+}
+.btn-copy:hover { background: #00e5a020; }
+.btn-copy.copied { color: #00c890; }
+
+/* ═══════════════════════════════════════
+   HOW-TO
+═══════════════════════════════════════ */
+.how-to {
+  background: #070e07; border: 1px solid #152015;
+  border-radius: var(--rsm); padding: 18px 20px; margin-top: 18px;
+}
+.how-to-title {
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  color: var(--green); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 14px;
+}
+.how-to-step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 11px; }
+.how-to-step:last-child { margin-bottom: 0; }
+.how-to-num {
+  width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+  background: var(--dim); color: var(--green);
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; margin-top: 1px;
+}
+.how-to-text { font-size: 13px; color: #7a90b0; line-height: 1.55; }
+.how-to-text strong { color: var(--text2); }
+
+/* ═══════════════════════════════════════
+   VIEWS
+═══════════════════════════════════════ */
+.view { display: none; }
+.view.visible { display: block; }
+
+/* ═══════════════════════════════════════
+   DASHBOARD
+═══════════════════════════════════════ */
+.dash-top {
+  display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 22px;
+}
+.online-pill {
+  display: flex; align-items: center; gap: 7px;
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  color: var(--green); background: var(--dim); border: 1px solid var(--ring);
+  padding: 5px 13px; border-radius: 100px; flex-shrink: 0;
+}
+.online-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 1.6s ease-in-out infinite; }
+.bot-card {
+  display: flex; align-items: center; gap: 15px;
+  padding: 17px; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--rsm); margin-bottom: 18px;
+}
+.bot-avatar {
+  width: 50px; height: 50px; border-radius: 11px; flex-shrink: 0;
+  background: linear-gradient(140deg, var(--green) 0%, #00a870 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; box-shadow: 0 4px 14px var(--ring);
+}
+.bot-name  { font-weight: 700; font-size: 15px; margin-bottom: 2px; }
+.bot-phone { font-family: var(--mono); font-size: 12px; color: var(--green); margin-bottom: 2px; }
+.bot-since { font-size: 11px; color: var(--muted); }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.stat-tile { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--rsm); padding: 15px 16px; }
+.stat-label { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: .09em; text-transform: uppercase; margin-bottom: 7px; }
+.stat-value { font-family: var(--mono); font-size: 26px; font-weight: 700; color: var(--text); line-height: 1; }
+.stat-value .u { font-size: 13px; color: var(--muted); font-weight: 400; }
+.section-label {
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 11px;
+}
+.cmd-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 22px; }
+.cmd-tag {
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  padding: 5px 11px; border-radius: 5px;
+  background: var(--card2); border: 1px solid var(--border);
+  color: var(--text2); transition: border-color .15s, color .15s; cursor: default;
+}
+.cmd-tag:hover { border-color: var(--green); color: var(--green); }
+.cmd-tag .p { color: var(--green); }
+.log-box { background: #030508; border: 1px solid #0c1220; border-radius: var(--rsm); overflow: hidden; margin-bottom: 18px; }
+.log-bar {
+  padding: 9px 15px; border-bottom: 1px solid #0c1220;
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: var(--mono); font-size: 10px; color: var(--muted);
+}
+.live-pill { display: flex; align-items: center; gap: 5px; color: var(--green); font-weight: 700; }
+.log-scroll {
+  padding: 12px 15px; max-height: 168px; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
+.log-scroll::-webkit-scrollbar { width: 4px; }
+.log-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.log-entry {
+  display: flex; gap: 9px; align-items: flex-start;
+  font-family: var(--mono); font-size: 11px; line-height: 1.45;
+  color: #2e4030; margin-bottom: 6px;
+}
+.log-entry:last-child { margin-bottom: 0; }
+.log-entry.fresh { color: #6a906a; }
+.log-ts          { flex-shrink: 0; color: #243024; }
+.log-type        { flex-shrink: 0; }
+.log-type.ok     { color: var(--green); }
+.log-type.info   { color: #5b8cd5; }
+.log-type.warn   { color: var(--warn); }
+.log-type.cmd    { color: #c080f0; }
+.log-type.err    { color: var(--danger); }
+
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
+#toast {
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  background: var(--card2); border: 1px solid var(--border);
+  color: var(--text); font-family: var(--mono); font-size: 12px;
+  padding: 11px 22px; border-radius: 100px;
+  box-shadow: 0 8px 32px #00000060;
+  opacity: 0; transition: opacity .25s, transform .25s;
+  pointer-events: none; z-index: 999; white-space: nowrap;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+.footer { text-align: center; padding: 40px 20px 24px; font-size: 12px; color: var(--muted); position: relative; z-index: 1; }
+.footer a { color: var(--green); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media (max-width: 480px) {
+  .header { padding: 14px 16px; }
+  .card   { padding: 22px 16px; }
+  .hero   { padding: 40px 0 32px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="bg-glow" aria-hidden="true"></div>
+
+<!-- HEADER -->
+<header class="header">
+  <a href="#" class="logo" aria-label="CRAZY VOL1 accueil">
+    <div class="logo-mark" aria-hidden="true">🤖</div>
+    <span class="logo-name">CRAZY VOL1<sup>BETA</sup></span>
+  </a>
+  <nav class="header-nav">
+    <a href="https://github.com/Crazynotdev/TERRA-BOT" target="_blank" rel="noopener" class="btn-ghost">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+      </svg>
+      GitHub
+    </a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge" role="status" id="server-status-badge">
+      <span class="badge-dot" aria-hidden="true"></span>
+      Vérification du bot…
+    </div>
+    <h1 class="hero-title">Ton bot WhatsApp<br /><span class="hi">actif en 60s</span></h1>
+    <p class="hero-sub">Entre ton numéro, reçois un code, connecte WhatsApp — ton bot TERRA-XMD tourne en permanence.</p>
+  </div>
+
+  <!-- STEPPER -->
+  <nav class="stepper" aria-label="Étapes">
+    <button class="step-btn active" id="tab-1" onclick="UI.goStep(1)" aria-current="step">
+      <span class="step-num" id="sn-1" aria-hidden="true">1</span>Connexion
+    </button>
+    <span class="step-arrow" aria-hidden="true">›</span>
+    <button class="step-btn" id="tab-2" onclick="UI.goStep(2)">
+      <span class="step-num" id="sn-2" aria-hidden="true">2</span>Mon Bot
+    </button>
+  </nav>
+
+  <!-- ════ VIEW 1 : CONNEXION ════ -->
+  <div class="view visible" id="view-1">
+    <div class="card">
+      <div class="card-head">
+        <h2 class="card-title">📱 Connecter WhatsApp</h2>
+        <p class="card-desc">Entre ton numéro pour recevoir le code de connexion.</p>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="phone-input">Numéro WhatsApp</label>
+        <div class="input-shell">
+          <span class="input-icon" aria-hidden="true">📞</span>
+          <input type="tel" id="phone-input" class="text-input"
+            placeholder="241 06 XX XX XX" maxlength="20" autocomplete="tel"
+            oninput="this.value=this.value.replace(/[^\d+ ]/g,'')"
+            aria-label="Numéro WhatsApp avec indicatif pays" />
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="gen-btn" onclick="Bot.generate()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Générer le code
+      </button>
+
+      <!-- Terminal -->
+      <div class="terminal" aria-live="polite">
+        <div class="term-bar" aria-hidden="true">
+          <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
+          <span class="term-title">crazy-vol1 — paircode</span>
+        </div>
+        <div class="term-body">
+          <div class="term-line">
+            <span class="term-prompt">$</span>
+            <span class="term-cmd">crazy-bot connect --paircode</span>
+          </div>
+          <div class="term-idle" id="term-idle">En attente<span id="term-dots"></span></div>
+          <div id="term-result" hidden>
+            <div class="term-line">
+              <span class="term-prompt">✓</span>
+              <span class="term-cmd" style="color:#68906a">Code généré avec succès</span>
+            </div>
+            <div class="term-code-wrap">
+              <span class="term-code" id="term-code" aria-label="Code de connexion"></span><span class="term-cursor" id="term-cursor" aria-hidden="true"></span>
+            </div>
+            <div class="copy-bar">
+              <button class="btn-copy" id="copy-btn" onclick="Bot.copy()" aria-label="Copier le code">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                Copier le code
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Instructions -->
+      <div class="how-to" id="how-to" hidden>
+        <p class="how-to-title">Comment lier WhatsApp</p>
+        <div class="how-to-step"><span class="how-to-num">1</span><p class="how-to-text">Ouvre <strong>WhatsApp</strong> sur ton téléphone</p></div>
+        <div class="how-to-step"><span class="how-to-num">2</span><p class="how-to-text">Va dans <strong>Paramètres → Appareils connectés → Lier un appareil</strong></p></div>
+        <div class="how-to-step"><span class="how-to-num">3</span><p class="how-to-text">Sélectionne <strong>"Lier avec un numéro de téléphone"</strong> et entre le code</p></div>
+        <div class="how-to-step"><span class="how-to-num">4</span><p class="how-to-text">Une fois connecté, clique sur <strong>"Accéder à mon bot"</strong></p></div>
+      </div>
+
+      <div id="cta-dash" hidden style="margin-top:14px">
+        <button class="btn btn-primary" onclick="Bot.openDashboard()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          Accéder à mon bot
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ VIEW 2 : DASHBOARD ════ -->
+  <div class="view" id="view-2">
+    <div class="card">
+      <div class="dash-top">
+        <div class="card-head" style="margin-bottom:0">
+          <h2 class="card-title">🤖 Mon Bot</h2>
+          <p class="card-desc" style="margin-bottom:0">TERRA-XMD actif sur WhatsApp</p>
+        </div>
+        <div class="online-pill" role="status"><span class="online-dot" aria-hidden="true"></span>EN LIGNE</div>
+      </div>
+
+      <div class="bot-card">
+        <div class="bot-avatar" aria-hidden="true">🤖</div>
+        <div>
+          <div class="bot-name">TERRA-XMD</div>
+          <div class="bot-phone" id="dash-phone">+241 06 — — — —</div>
+          <div class="bot-since">Connecté <span id="dash-since">à l'instant</span></div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-tile"><div class="stat-label">Messages</div><div class="stat-value" id="stat-msg">0</div></div>
+        <div class="stat-tile"><div class="stat-label">Commandes</div><div class="stat-value" id="stat-cmd">0</div></div>
+        <div class="stat-tile"><div class="stat-label">Uptime</div><div class="stat-value" id="stat-uptime">0<span class="u">s</span></div></div>
+        <div class="stat-tile"><div class="stat-label">Statut API</div><div class="stat-value" id="stat-api" style="font-size:13px;padding-top:6px;color:var(--green)">OK</div></div>
+      </div>
+
+      <p class="section-label">Commandes — préfixe <span style="color:var(--green);font-family:var(--mono)">.</span></p>
+      <div class="cmd-tags">
+        <span class="cmd-tag"><span class="p">.</span>menu</span>
+        <span class="cmd-tag"><span class="p">.</span>ping</span>
+        <span class="cmd-tag"><span class="p">.</span>uptime</span>
+        <span class="cmd-tag"><span class="p">.</span>script</span>
+        <span class="cmd-tag"><span class="p">.</span>8ball</span>
+        <span class="cmd-tag"><span class="p">.</span>dice</span>
+        <span class="cmd-tag"><span class="p">.</span>flip</span>
+        <span class="cmd-tag"><span class="p">.</span>quote</span>
+        <span class="cmd-tag"><span class="p">.</span>calc</span>
+        <span class="cmd-tag"><span class="p">.</span>choisir</span>
+        <span class="cmd-tag"><span class="p">.</span>verite</span>
+        <span class="cmd-tag"><span class="p">.</span>defi</span>
+        <span class="cmd-tag"><span class="p">.</span>pp</span>
+        <span class="cmd-tag"><span class="p">.</span>info</span>
+        <span class="cmd-tag"><span class="p">.</span>bio</span>
+        <span class="cmd-tag"><span class="p">.</span>kick</span>
+        <span class="cmd-tag"><span class="p">.</span>promote</span>
+        <span class="cmd-tag"><span class="p">.</span>demote</span>
+        <span class="cmd-tag"><span class="p">.</span>mute</span>
+        <span class="cmd-tag"><span class="p">.</span>tagall</span>
+        <span class="cmd-tag"><span class="p">.</span>antilink</span>
+        <span class="cmd-tag"><span class="p">.</span>welcome</span>
+        <span class="cmd-tag"><span class="p">.</span>ginfo</span>
+        <span class="cmd-tag"><span class="p">.</span>poll</span>
+        <span class="cmd-tag"><span class="p">.</span>ban</span>
+        <span class="cmd-tag"><span class="p">.</span>bc</span>
+        <span class="cmd-tag"><span class="p">.</span>stats</span>
+      </div>
+
+      <p class="section-label">Activité en direct</p>
+      <div class="log-box">
+        <div class="log-bar">
+          <span>terminal</span>
+          <span class="live-pill">
+            <svg width="7" height="7" viewBox="0 0 7 7"><circle cx="3.5" cy="3.5" r="3.5" fill="currentColor"/></svg>
+            LIVE
+          </span>
+        </div>
+        <div class="log-scroll" id="log-scroll" aria-live="polite"></div>
+      </div>
+
+      <button class="btn-danger-outline" onclick="Bot.disconnect()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Déconnecter le bot
+      </button>
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <p>Propulsé par <a href="https://github.com/Crazynotdev/TERRA-BOT" target="_blank" rel="noopener">TERRA-BOT</a> — by <a href="https://github.com/Crazynotdev" target="_blank" rel="noopener">Crazynotdev</a></p>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+'use strict'
+
+/* ════════════════════════════════════════════════
+   CONFIG — URL du bot backend
+   En local  : http://localhost:3000
+   En prod   : https://ton-domaine.railway.app
+═══════════════════════════════════════════════ */
+const API_URL = 'http://localhost:3000'
+
+/* ════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════ */
+const S = {
+  code:      '',
+  phone:     '',
+  step:      1,
+  uptime:    0,
+  msgs:      0,
+  cmds:      0,
+  timers:    {},
+}
+
+/* ════════════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════════ */
+const $   = id => document.getElementById(id)
+const pad = n  => String(n).padStart(2, '0')
+
+let _toastT
+function toast(msg, ms = 2600) {
+  const el = $('toast')
+  el.textContent = msg
+  el.classList.add('show')
+  clearTimeout(_toastT)
+  _toastT = setTimeout(() => el.classList.remove('show'), ms)
+}
+
+function killTimer(k) { clearInterval(S.timers[k]); delete S.timers[k] }
+
+/* ════════════════════════════════════════════════
+   API CALLS
+═══════════════════════════════════════════════ */
+const API = {
+  async get(path) {
+    const r = await fetch(API_URL + path, { signal: AbortSignal.timeout(10000) })
+    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.error || `HTTP ${r.status}`) }
+    return r.json()
+  },
+  async post(path) {
+    const r = await fetch(API_URL + path, { method: 'POST', signal: AbortSignal.timeout(10000) })
+    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.error || `HTTP ${r.status}`) }
+    return r.json()
+  },
+  async status() { return this.get('/status') },
+  async pair(phone) { return this.get(`/pair?phone=${phone}`) },
+  async disconnect() { return this.post('/disconnect') },
+}
+
+/* ════════════════════════════════════════════════
+   TERMINAL
+═══════════════════════════════════════════════ */
+const Term = {
+  _iv: null,
+  _n:  0,
+
+  startDots() {
+    this._n = 0
+    this._iv = setInterval(() => { $('term-dots').textContent = '.'.repeat((this._n++ % 3) + 1) }, 500)
+  },
+  stopDots() {
+    clearInterval(this._iv); this._iv = null
+    const el = $('term-dots'); if (el) el.textContent = ''
+  },
+
+  setIdle(msg, color) {
+    const el = $('term-idle')
+    if (!el) return
+    el.hidden = false
+    el.firstChild.textContent = msg || 'En attente'
+    el.style.color = color || ''
+  },
+
+  typeCode(code, cb) {
+    const display = $('term-code'), cursor = $('term-cursor')
+    display.textContent = ''
+    if (cursor) cursor.hidden = false
+    display.setAttribute('aria-label', 'Code : ' + code)
+    let i = 0
+    const iv = setInterval(() => {
+      if (i < code.length) display.textContent += code[i++]
+      else { clearInterval(iv); if (cb) cb() }
+    }, 85)
+  },
+
+  showResult(code) {
+    const idle = $('term-idle'); if (idle) idle.hidden = true
+    const result = $('term-result'); if (result) result.hidden = false
+    this.typeCode(code, () => {
+      $('how-to').hidden    = false
+      $('cta-dash').hidden  = false
+      const btn = $('gen-btn')
+      btn.disabled = false
+      btn.innerHTML = '🔄 Générer un nouveau code'
+      toast('✅ Code prêt — entre-le dans WhatsApp')
+    })
+  },
+
+  reset() {
+    this.stopDots()
+    const r = $('term-result'); if (r) r.hidden = true
+    const c = $('term-code'); if (c) { c.textContent = ''; c.removeAttribute('aria-label') }
+    $('how-to').hidden   = true
+    $('cta-dash').hidden = true
+    const idle = $('term-idle')
+    if (idle) { idle.hidden = false; idle.firstChild.textContent = 'En attente'; idle.style.color = '' }
+    const cb = $('copy-btn')
+    if (cb) {
+      cb.classList.remove('copied')
+      cb.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copier le code`
+    }
+  },
+}
+
+/* ════════════════════════════════════════════════
+   LOG
+═══════════════════════════════════════════════ */
+const Log = {
+  add(type, text) {
+    const scroll = $('log-scroll'); if (!scroll) return
+    const now  = new Date()
+    const time = `${pad(now.getHours())}:${pad(now.getMinutes())}`
+    const div  = document.createElement('div')
+    div.className = 'log-entry fresh'
+    div.innerHTML = `<span class="log-ts">${time}</span><span class="log-type ${type}">[${type.toUpperCase()}]</span><span>${text}</span>`
+    scroll.appendChild(div)
+    scroll.scrollTop = scroll.scrollHeight
+    while (scroll.children.length > 40) scroll.removeChild(scroll.firstChild)
+  },
+  clear() { const s = $('log-scroll'); if (s) s.innerHTML = '' },
+}
+
+/* ════════════════════════════════════════════════
+   UI
+═══════════════════════════════════════════════ */
+const UI = {
+  goStep(n) {
+    if (n === 2 && !S.code) { toast('⚠️ Génère d\'abord ton code de connexion'); return }
+    S.step = n
+    document.querySelectorAll('.view').forEach((v, i) => v.classList.toggle('visible', i + 1 === n))
+    document.querySelectorAll('.step-btn').forEach((btn, i) => {
+      btn.classList.remove('active', 'done')
+      const sn = $(`sn-${i + 1}`)
+      if (i + 1 === n) { btn.classList.add('active'); btn.setAttribute('aria-current', 'step') }
+      else btn.removeAttribute('aria-current')
+      if (i + 1 < n)  { btn.classList.add('done') }
+      if (sn) sn.textContent = i + 1 < n
+        ? '✓'
+        : String(i + 1)
+    })
+  },
+}
+
+/* ════════════════════════════════════════════════
+   BOT
+═══════════════════════════════════════════════ */
+const BOT_CMDS = ['.menu','.ping','.8ball','.dice','.flip','.quote','.pp','.info','.ginfo','.tagall','.defi','.verite','.calc','.kick','.antilink']
+const BOT_MSGS = ['message reçu','msg de groupe','msg privé','réaction reçue','sticker reçu']
+
+const Bot = {
+
+  /* ── Génère le PairCode via l'API du bot ── */
+  async generate() {
+    const raw = $('phone-input').value.replace(/\s/g, '')
+    if (!raw || raw.replace(/\+/g, '').length < 8) {
+      toast('⚠️ Entre un numéro valide avec l\'indicatif'); $('phone-input').focus(); return
+    }
+    const btn = $('gen-btn')
+    btn.disabled = true
+    btn.innerHTML = '<span class="spinner" aria-hidden="true"></span> Connexion au bot…'
+    Term.reset()
+    Term.setIdle('Connexion au bot')
+    Term.startDots()
+
+    const phone = raw.replace(/[^0-9]/g, '')
+    S.phone = '+' + phone
+
+    try {
+      const data = await API.pair(phone)
+      const code = data.code
+      if (!code) throw new Error('Code non reçu')
+      S.code = code
+      Term.stopDots()
+      Term.showResult(code)
+    } catch (err) {
+      Term.stopDots()
+      Term.setIdle('✗ ' + err.message, 'var(--danger)')
+      toast('❌ ' + err.message, 3500)
+      btn.disabled = false
+      btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Réessayer`
+    }
+  },
+
+  /* ── Copier le code ── */
+  copy() {
+    if (!S.code) return
+    const clean = S.code.replace(/-/g, '')
+    navigator.clipboard.writeText(clean).then(() => {
+      const btn = $('copy-btn')
+      btn.classList.add('copied')
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Copié !`
+      toast('📋 Code copié !')
+      setTimeout(() => {
+        btn.classList.remove('copied')
+        btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copier le code`
+      }, 2800)
+    }).catch(() => toast('⚠️ Code : ' + S.code))
+  },
+
+  /* ── Ouvrir le dashboard ── */
+  openDashboard() {
+    S.uptime = 0; S.msgs = 0; S.cmds = 0
+    $('dash-phone').textContent = S.phone
+    $('dash-since').textContent = 'à l\'instant'
+    $('stat-msg').textContent   = '0'
+    $('stat-cmd').textContent   = '0'
+    UI.goStep(2)
+    Log.clear()
+    Log.add('ok',   'CRAZY VOL1 prêt')
+    Log.add('info', 'Connecté → ' + S.phone)
+    Log.add('ok',   'TERRA-XMD en écoute active')
+
+    // Uptime ticker
+    killTimer('up')
+    S.timers.up = setInterval(() => {
+      S.uptime++
+      const h = Math.floor(S.uptime / 3600), m = Math.floor((S.uptime % 3600) / 60), s = S.uptime % 60
+      const el = $('stat-uptime')
+      if (!el) return
+      if      (h > 0) el.innerHTML = `${h}<span class="u">h</span>${pad(m)}<span class="u">m</span>`
+      else if (m > 0) el.innerHTML = `${m}<span class="u">m</span>${pad(s)}<span class="u">s</span>`
+      else            el.innerHTML = `${s}<span class="u">s</span>`
+    }, 1000)
+
+    // Polling /status toutes les 8s pour stats réelles
+    killTimer('poll')
+    S.timers.poll = setInterval(async () => {
+      try {
+        const data = await API.status()
+        $('stat-api').textContent = data.connected ? 'CONNECTÉ' : 'DÉCO'
+        $('stat-api').style.color = data.connected ? 'var(--green)' : 'var(--danger)'
+      } catch {
+        $('stat-api').textContent  = 'HORS LIGNE'
+        $('stat-api').style.color  = 'var(--danger)'
+        Log.add('err', 'Bot injoignable — vérifie que le bot tourne')
+      }
+    }, 8000)
+
+    // Activité simulée (visuel)
+    killTimer('act')
+    S.timers.act = setInterval(() => {
+      if (Math.random() > .5) {
+        S.msgs++; $('stat-msg').textContent = S.msgs
+        if (Math.random() > .55) {
+          S.cmds++; $('stat-cmd').textContent = S.cmds
+          Log.add('cmd', 'cmd reçue : ' + BOT_CMDS[Math.floor(Math.random() * BOT_CMDS.length)])
+        } else {
+          Log.add('ok', BOT_MSGS[Math.floor(Math.random() * BOT_MSGS.length)])
+        }
+      }
+    }, 2800)
+  },
+
+  /* ── Déconnecter ── */
+  async disconnect() {
+    if (!confirm('Déconnecter le bot WhatsApp ?')) return
+    try {
+      await API.disconnect()
+    } catch (err) {
+      Log.add('warn', 'Déconnexion API : ' + err.message)
+    }
+    killTimer('up'); killTimer('poll'); killTimer('act')
+    S.code = ''; S.phone = ''
+    const btn = $('gen-btn')
+    btn.disabled = false
+    btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Générer le code`
+    $('phone-input').value = ''
+    Term.reset()
+    Log.clear()
+    UI.goStep(1)
+    toast('👋 Bot déconnecté')
+  },
+}
+window.UI = UI; window.Bot = Bot
+
+/* ════════════════════════════════════════════════
+   INIT — vérification du statut au chargement
+═══════════════════════════════════════════════ */
+;(async function init() {
+  const badge = $('server-status-badge')
+  try {
+    const data = await API.status()
+    badge.innerHTML = `<span class="badge-dot"></span>${data.connected ? 'Bot connecté — prêt' : 'Serveurs opérationnels'}`
+    if (data.connected && data.phone) {
+      // Session déjà active : pré-remplir et proposer le dashboard
+      S.code  = 'RECONNECT'
+      S.phone = data.phone
+      toast('✅ Session déjà active sur ' + data.phone)
+    }
+  } catch {
+    badge.innerHTML = `<span class="badge-dot" style="background:var(--warn)"></span>Bot hors ligne — lance npm start`
+    badge.style.color = 'var(--warn)'
+  }
+})()
+</script>
+</body>
+</html>
