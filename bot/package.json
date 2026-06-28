@@ -1,0 +1,30 @@
+{
+  "name": "crazy-vol1-bot",
+  "version": "1.0.0",
+  "description": "CRAZY VOL1 — Bot WhatsApp + serveur API pour le site SaaS",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "dev":   "nodemon index.js",
+    "pm2":   "pm2 start index.js --name crazy-vol1 && pm2 save"
+  },
+  "dependencies": {
+    "gifted-baileys": "^2.0.0",
+    "pino":           "^8.0.0",
+    "chalk":          "^4.1.2",
+    "figlet":         "^1.7.0",
+    "fs-extra":       "^11.2.0",
+    "moment":         "^2.30.1",
+    "node-cache":     "^5.1.2",
+    "dotenv":         "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "author": "Crazynotdev",
+  "license": "MIT"
+}
